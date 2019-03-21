@@ -19,6 +19,7 @@
 pragma solidity ^0.5.5;
 pragma experimental "ABIEncoderV2";
 
+import "@0x/contracts-exchange-libs/contracts/src/LibEIP712.sol";
 import "../src/libs/LibConstants.sol";
 import "../src/libs/LibCoordinatorApproval.sol";
 import "../src/libs/LibZeroExTransaction.sol";
@@ -27,12 +28,14 @@ import "../src/libs/LibZeroExTransaction.sol";
 // solhint-disable no-empty-blocks
 contract TestLibs is
     LibConstants,
+    LibEIP712,
     LibCoordinatorApproval,
     LibZeroExTransaction
 {
-    constructor (address _exchange)
+    constructor (address _exchange, uint256 _chainId)
         public
         LibConstants(_exchange)
+        LibEIP712(_chainId)
     {}
 
     /// @dev Calculated the EIP712 hash of the Coordinator approval mesasage using the domain separator of this contract.

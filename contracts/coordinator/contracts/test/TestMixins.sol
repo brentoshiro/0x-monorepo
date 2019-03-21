@@ -19,6 +19,7 @@
 pragma solidity ^0.5.5;
 pragma experimental "ABIEncoderV2";
 
+import "@0x/contracts-exchange-libs/contracts/src/LibEIP712.sol";
 import "../src/libs/LibConstants.sol";
 import "../src/MixinSignatureValidator.sol";
 import "../src/MixinCoordinatorApprovalVerifier.sol";
@@ -27,11 +28,13 @@ import "../src/MixinCoordinatorApprovalVerifier.sol";
 // solhint-disable no-empty-blocks
 contract TestMixins is
     LibConstants,
+    LibEIP712,
     MixinSignatureValidator,
     MixinCoordinatorApprovalVerifier
 {
-    constructor (address _exchange)
+    constructor (address _exchange, uint256 _chainId)
         public
         LibConstants(_exchange)
+        LibEIP712(_chainId)
     {}
 }

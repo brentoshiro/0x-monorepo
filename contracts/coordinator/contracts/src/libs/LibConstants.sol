@@ -26,15 +26,11 @@ contract LibConstants {
 
     // The 0x Exchange contract.
     ITransactions internal EXCHANGE;
-    // The numerical ID of the network this contract is deployed on.
-    uint256 internal CHAIN_ID;
 
     /// @param _exchange Address of the 0x Exchange contract.
-    /// @param _chainId Chain ID of the network this contract is deployed on.
-    constructor (address _exchange, uint256 _chainId)
+    constructor (address _exchange)
         public
     {
         EXCHANGE = ITransactions(_exchange);
-        CHAIN_ID = _chainId;
     }
 }
