@@ -7,14 +7,15 @@ import * as _ from 'lodash';
 export const hashUtils = {
     getApprovalHashBuffer(
         transaction: SignedZeroExTransaction,
-        chainId: BigNumber,
         verifyingContractAddress: string,
+        chainId: number,
         txOrigin: string,
         approvalExpirationTimeSeconds: BigNumber,
     ): Buffer {
         const domain = {
             name: constants.COORDINATOR_DOMAIN_NAME,
             version: constants.COORDINATOR_DOMAIN_VERSION,
+            chainId,
             verifyingContractAddress,
         };
         const transactionHash = transactionHashUtils.getTransactionHashHex(transaction);
@@ -37,16 +38,16 @@ export const hashUtils = {
     },
     getApprovalHashHex(
         transaction: SignedZeroExTransaction,
-        chainId: BigNumber,
         verifyingContractAddress: string,
+        chainId: number,
         txOrigin: string,
         approvalExpirationTimeSeconds: BigNumber,
     ): string {
         const hashHex = `0x${hashUtils
             .getApprovalHashBuffer(
                 transaction,
-                chainId,
                 verifyingContractAddress,
+                chainId,
                 txOrigin,
                 approvalExpirationTimeSeconds)
             .toString('hex')}`;

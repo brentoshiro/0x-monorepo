@@ -1,7 +1,7 @@
 import { addressUtils, chaiSetup, constants, provider, txDefaults, web3Wrapper } from '@0x/contracts-test-utils';
 import { BlockchainLifecycle } from '@0x/dev-utils';
 import { transactionHashUtils } from '@0x/order-utils';
-import { BigNumber } from '@0x/utils';
+import { BigNumber, providerUtils } from '@0x/utils';
 import * as chai from 'chai';
 
 import { artifacts, hashUtils, TestLibsContract } from '../src';
@@ -11,6 +11,7 @@ const expect = chai.expect;
 const blockchainLifecycle = new BlockchainLifecycle(web3Wrapper);
 
 describe('Libs tests', () => {
+    let chainId: number;
     let testLibs: TestLibsContract;
     const exchangeAddress = addressUtils.generatePseudoRandomAddress();
 
@@ -21,11 +22,13 @@ describe('Libs tests', () => {
         await blockchainLifecycle.revertAsync();
     });
     before(async () => {
+        chainId = await providerUtils.getChainIdAsync(provider);
         testLibs = await TestLibsContract.deployFrom0xArtifactAsync(
             artifacts.TestLibs,
             provider,
             txDefaults,
             exchangeAddress,
+            new BigNumber(chainId),
         );
     });
     beforeEach(async () => {
@@ -39,6 +42,7 @@ describe('Libs tests', () => {
         it('should return the correct transaction hash', async () => {
             const tx = {
                 verifyingContractAddress: exchangeAddress,
+                chainId,
                 salt: new BigNumber(0),
                 signerAddress: constants.NULL_ADDRESS,
                 data: '0x1234',
@@ -53,6 +57,7 @@ describe('Libs tests', () => {
         it('should return the correct approval hash', async () => {
             const signedTx = {
                 verifyingContractAddress: exchangeAddress,
+                chainId,
                 salt: new BigNumber(0),
                 signerAddress: constants.NULL_ADDRESS,
                 data: '0x1234',
@@ -69,6 +74,7 @@ describe('Libs tests', () => {
             const expectedApprovalHash = hashUtils.getApprovalHashHex(
                 signedTx,
                 testLibs.address,
+                chainId,
                 txOrigin,
                 approvalExpirationTimeSeconds,
             );
